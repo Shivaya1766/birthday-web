@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ultimate Test</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Mobile Container Setup */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background-color: #0d0d0d;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screen.active {
+            opacity: 1;
+        }
+
+        /* Global Component Framework */
+        .card {
+            background-color: #1a1a1a;
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid #FFD700;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gold {
+            background: #1a1a1a;
+            border: 1px solid #FFD700;
+            color: #FFD700;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 15px;
+        }
+
+        .btn-gold:hover, .btn-gold:active {
+            box-shadow: 0 0 12px #FFD700;
+            background: #FFD700;
+            color: #0d0d0d;
+        }
+
+        /* Toast Component */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .toast {
+            padding: 12px 24px;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: toastIn 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Screen 1: Typewriter Specifics */
+        #screen-opening {
+            align-items: flex-start;
+            padding: 40px;
+        }
+        .typewriter-line {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            line-height: 1.5;
+        }
+        .typewriter-line.visible { opacity: 1; }
+        #start-btn { align-self: center; display: none; }
+
+        /* Screen 2: Gate Setup */
+        .muted-protocol {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .counter-msg {
+            color: #FF6B9D;
+            font-size: 0.95rem;
+            min-height: 24px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .gate-q {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-align: center;
+        }
+        .gate-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+        .btn-trap-container {
+            position: relative;
+            width: 100%;
+        }
+        .btn-trap-a {
+            background-color: #e74c3c;
+            color: #fff;
+            border: 2px solid transparent;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            animation: pulseBorder 1.5s infinite;
+        }
+        .arrow-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #e74c3c;
+            animation: arrowBounce 0.6s infinite alternate;
+            margin-top: 5px;
+        }
+        .arrow-text {
+            font-size: 0.75rem;
+            font-style: italic;
+        }
+        .btn-trap-b {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #333;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-trap-b.unlocked {
+            border-color: #FFD700;
+            color: #FFD700;
+            box-shadow: 0 0 12px #FFD700;
+        }
+        .gate-hint {
+            font-size: 0.85rem;
+            color: #FF6B9D;
+            margin-top: 8px;
+            display: none;
+            text-align: center;
+        }
+
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        @keyframes arrowBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-6px); }
+        }
+
+        /* Screen 3: Quiz System */
+        .progress-wrapper {
+            width: 100%;
+            background-color: #222;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #FFD700;
+            transition: width 0.4s ease;
+        }
+        .quiz-title {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 25px;
+        }
+        .quiz-question {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+        }
+        .option-btn {
+            background-color: #222;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+        }
+        .option-btn:active {
+            background-color: #333;
+        }
+        .flash-option {
+            animation: optionFlash 0.5s ease 2;
+        }
+        @keyframes optionFlash {
+            0%, 100% { background-color: #222; border-color: #333; }
+            50% { background-color: #FF6B9D; border-color: #FFD700; }
+        }
+
+        /* Celebration Screen Override Overlay */
+        .congrats-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #0d0d0d;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .congrats-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .congrats-main {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        .congrats-sub {
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        /* Screen 4: Video Reveal Setup */
+        .video-header { font-size: 1.5rem; margin-bottom: 5px; text-align: center; }
+        .video-sub { color: #888; font-size: 0.85rem; margin-bottom: 20px; text-align: center; }
+        .wake-up-ticker {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin: 25px 0;
+            animation: wakeBounce 0.4s infinite alternate;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .exhibit-text { font-size: 0.8rem; color: #555; font-style: italic; margin-bottom: 20px; text-align: center; }
+        @keyframes wakeBounce {
+            from { transform: scale(0.95); text-shadow: 0 0 5px rgba(255,215,0,0.2); }
+            to { transform: scale(1.05); text-shadow: 0 0 15px rgba(255,215,0,0.8); }
+        }
+
+        /* Screen 5: Curtain Reveal Mechanics */
+        #screen-crown { position: relative; overflow: hidden; }
+        .curtain-wrapper {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            display: flex;
+            pointer-events: none;
+        }
+        .curtain {
+            width: 50%;
+            height: 100%;
+            background-color: #FFD700;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .curtain.left { transform: translateX(0); border-right: 1px solid #000; }
+        .curtain.right { transform: translateX(0); border-left: 1px solid #000; }
+        .split .curtain.left { transform: translateX(-100%); }
+        .split .curtain.right { transform: translateX(100%); }
+        .crown-phrase {
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            color: #FFD700;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        /* Screen 6: Final Birthday Layout */
+        .hbd-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 42px;
+            color: #FFD700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .gold-line {
+            width: 60%;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #FFD700, transparent);
+            margin-bottom: 25px;
+        }
+        .hbd-msg {
+            font-family: 'Dancing Script', cursive;
+            font-size: 21px;
+            line-height: 1.8;
+            color: #ffffff;
+            white-space: pre-line;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        .emoji-line {
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .footer-credit {
+            font-size: 0.75rem;
+            opacity: 0.4;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        /* Confetti DOM Element Setup */
+        .confetti-particle {
+            position: fixed;
+            top: -20px;
+            z-index: 999;
+            font-size: 24px;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-container" id="toast-box"></div>
+
+    <div class="app-container">
+
+        <div class="screen" id="screen-opening">
+            <div class="typewriter-line" id="line1">You have been selected...</div>
+            <div class="typewriter-line" id="line2">for a very important test.</div>
+            <div class="typewriter-line" id="line3"> This test will check your loyalty.</div>
+            <div class="typewriter-line" id="line4">Only the worthy may proceed.</div>
+            <button class="btn-gold" id="start-btn" onclick="goToGate()">Begin The Test</button>
+        </div>
+
+        <div class="screen" id="screen-gate">
+            <div class="muted-protocol">Test Protocol: Question 0 of 8</div>
+            <div class="counter-msg" id="gate-counter-msg"></div>
+            <div class="gate-q">am I someone special to you?</div>
+            
+            <div class="gate-actions">
+                <div class="btn-trap-container">
+                    <button class="btn-trap-a" id="trap-a-btn" onclick="handleGateClick(true)">a) No </button>
+                    <div class="arrow-indicator" id="trap-arrow">
+                        <span></span>
+                        <span class="arrow-text">pick this</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-trap-b" id="trap-b-btn" onclick="handleGateClick(false)">b) Yes </button>
+                    <div class="gate-hint" id="gate-b-hint">The correct answer was always there. </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-quiz">
+            <div class="progress-wrapper">
+                <div class="progress-bar" id="quiz-progress"></div>
+            </div>
+            <div class="quiz-title" id="quiz-tracker-text">Question 1 of 8</div>
+            <div class="card">
+                <div class="quiz-question" id="live-question-text">...</div>
+                <div class="quiz-options" id="live-options-box"></div>
+            </div>
+        </div>
+
+        <div class="congrats-overlay" id="congrats-layer">
+            <div class="congrats-main">CONGRATULATIONS.</div>
+            <div class="congrats-sub">You passed. Barely. </div>
+        </div>
+
+        <div class="screen" id="screen-video">
+            <div class="video-header">Before your gift...</div>
+            <div class="video-sub">I have some evidence.  Do not share this in the family group. </div>
+            
+            <video id="reveal-media" src="birthday_gift.mp4" controls playsinline style="width:100%; max-width:360px; border-radius:12px; border: 2px solid #FFD700; margin: 0 auto; display: block;"></video>
+            
+            <div class="wake-up-ticker"> WAKE UP </div>
+            <div class="exhibit-text">Exhibit A. Submitted to the court of love. </div>
+            
+            <button class="btn-gold" onclick="goToCrown()">See Your Real Gift </button>
+        </div>
+
+        <div class="screen" id="screen-crown">
+            <div class="curtain-wrapper" id="curtain-container">
+                <div class="curtain left"></div>
+                <div class="curtain right"></div>
+            </div>
+            
+            <img src="birthday_throne.jpg" alt=" " style="width:100%; max-width:340px; border-radius:12px; border: 3px solid #FFD700; display:block; margin: 0 auto;">
+            <div class="crown-phrase">   Queen ,  </div>
+            
+            <button class="btn-gold" onclick="goToFinal()">Continue </button>
+        </div>
+
+        <div class="screen" id="screen-final">
+            <div class="hbd-title">Happy Birthday ! </div>
+            <hr class="gold-line">
+            <div class="hbd-msg">Mamiji,
+Kuch log hote hain jo invite kiye bina life ka part ban jaate hain  aap exactly waisi hain.
+Jab main khud se baat karna nahi chahta tha, aap tab bhi thi. No drama, no "kya hua?"  bas thi. Aur honestly, that meant more than words. Jo baatein Maa ko nahi pata thi, woh aapko kaise pata hoti thi  yeh mystery aaj bhi unsolved hai mere liye.
+Khane ki baat karein toh  mere liye kuch bolna hi nahi padta. Aap already jaanti hain kya banana hai. Jaise aapka kitchen sirf mere liye programmed ho. 
+Fashion mein toh aap Google se bhi zyada updated hain. Koi bhi trend aaye  aap market mein already ho, hum log tab bhi soch hi rahe hote hain.
+Aur ek special quality jo sirf aapke paas hai  mere baare mein "sach" bolne mein aap kabhi nahi jhijhkti. Chahe main saamne hun ya nahi, aapki "honest opinions" hamesha freely flow karti hain.  Par yahi toh baat hai  jo actually care karta hai, woh bolta hai. Jo nahi karta, woh indifferent rehta hai. Aap kabhi indifferent nahi rahi.
+Yehi cheez aapko special banati hai, Mamiji. Everyone Loves you lot </div>
+            <div class="emoji-line">    </div>
+            <div class="footer-credit">Made with love </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Quiz Data Storage Array
+        const quizDatabase = [
+            {
+                questionText: "what happens when I get bored?",
+                options: [
+                    { text: "I study productively ", isCorrect: false, wrongToast: "Hahahaha. No. Try again." },
+                    { text: "I sleep peacefully ", isCorrect: false, wrongToast: "That's you so much, but please Focus." },
+                    { text: "I call you repeatedly until you picks up ", isCorrect: true, wrongToast: "" },
+                    { text: "I go outside and touch grass ", isCorrect: false, wrongToast: "I don't know what that means." }
+                ]
+            },
+            {
+                questionText: "I sent you a message. No reply in 5 minutes. What happened next?",
+                options: [
+                    { text: "I waited patiently", isCorrect: false, wrongToast: "Who taught you that? Wrong." },
+                    { text: "I sent 47 follow-up messages and a voice note ", isCorrect: true, wrongToast: "" },
+                    { text: "I understood you were busy", isCorrect: false, wrongToast: "LOL. Next option please." },
+                    { text: "I hacked your phone to check", isCorrect: false, wrongToast: "Tempting. Not this time." }
+                ]
+            },
+            {
+                questionText: "Identify the suspect. The person who built this website is someone who...",
+                options: [
+                    { text: "Is quiet, calm, and hates being the center of attention", isCorrect: false, wrongToast: "Not even close." },
+                    { text: "Talks a lot, always has a plan, claims to understand technology, and puts the people they love before everything else", isCorrect: true, wrongToast: "" },
+                    { text: "Is a certified software engineer with 5 years of professional experience", isCorrect: false, wrongToast: "I wish. Wrong." },
+                    { text: "Has never used a computer in their life", isCorrect: false, wrongToast: "Definitely not." }
+                ]
+            },
+            {
+                questionText: "what is this person's #3 priority in life?",
+                options: [
+                    { text: "Food ", isCorrect: false, wrongToast: "Respectable answer. Wrong." },
+                    { text: "Gaming ", isCorrect: false, wrongToast: "I can see why you thought this." },
+                    { text: "Sleep ", isCorrect: false, wrongToast: "Still no." },
+                    { text: "The person reading this right now ", isCorrect: true, wrongToast: "" }
+                ]
+            },
+            {
+                questionText: "How many times per day does this person need attention?",
+                specialMechanic: true,
+                options: [
+                    { text: "Once", isCorrect: false, wrongToast: "Wrong. Try again." },
+                    { text: "Twice", isCorrect: false, wrongToast: "Wrong. Try again." },
+                    { text: "Sometimes", isCorrect: false, wrongToast: "Wrong. Try again." },
+                    { text: "Never  very independent ", isCorrect: false, wrongToast: "The funniest wrong answer. Try again." }
+                ]
+            },
+            {
+                questionText: "One more clue about the creator. Their relationship with technology is best described as:",
+                options: [
+                    { text: "Professional  writes clean code, zero problems", isCorrect: false, wrongToast: "Flattering. Incorrect." },
+                    { text: "Complicated  breaks things while trying to fix other things", isCorrect: false, wrongToast: "Partially true. Still wrong." },
+                    { text: "Non-existent  they hired someone to make this", isCorrect: false, wrongToast: "Absolutely not." },
+                    { text: "Self-taught  learned everything in a few months and will not stop talking about it", isCorrect: true, wrongToast: "" }
+                ]
+            },
+            {
+                questionText: "When I say 'it's fine, don't worry about me'... what does it actually mean?",
+                options: [
+                    { text: "It is actually fine", isCorrect: false, wrongToast: "You don't know me at all." },
+                    { text: "I need attention. Immediately. Right now. ", isCorrect: true, wrongToast: "" },
+                    { text: "I am being mature and handling it", isCorrect: false, wrongToast: "Bold theory. Wrong." },
+                    { text: "I am digitally processing my emotions", isCorrect: false, wrongToast: "Creative. Still wrong." }
+                ]
+            },
+            {
+                questionText: "Complete this sentence: This person is ______",
+                options: [
+                    { text: "A completely normal person", isCorrect: false, wrongToast: "SYSTEM ERROR. ANSWER REJECTED." },
+                    { text: "Slightly dramatic", isCorrect: false, wrongToast: "Accurate. But wrong." },
+                    { text: "Your favourite person who loves you more than you know", isCorrect: false, wrongToast: "Close. Say it properly." },
+                    { text: "All of the above, and also a certified genius", isCorrect: true, wrongToast: "" }
+                ]
+            }
+        ];
+
+        // Architecture States
+        let activeScreenId = "screen-opening";
+        let gateClickCount = 0;
+        let currentQuizIndex = 0;
+        let q5WrongCounter = 0;
+        let continuousConfettiInterval = null;
+
+        // View Management Engine
+        function switchScreen(targetId) {
+            const currentScreen = document.getElementById(activeScreenId);
+            const nextScreen = document.getElementById(targetId);
+
+            if (currentScreen) {
+                currentScreen.style.opacity = '0';
+                setTimeout(() => {
+                    currentScreen.style.display = 'none';
+                    executeScreenEntranceLogic(targetId, nextScreen);
+                }, 500);
+            } else {
+                executeScreenEntranceLogic(targetId, nextScreen);
+            }
+        }
+
+        function executeScreenEntranceLogic(targetId, nextScreen) {
+            nextScreen.style.display = 'flex';
+            setTimeout(() => {
+                nextScreen.style.opacity = '1';
+                activeScreenId = targetId;
+                
+                // Specific action hooks per architecture requirements
+                if (targetId === 'screen-video') {
+                    const vid = document.getElementById('reveal-media');
+                    if (vid) vid.play().catch(() => {});
+                }
+                if (targetId === 'screen-crown') {
+                    setTimeout(() => {
+                        document.getElementById('curtain-container').classList.add('split');
+                    }, 100);
+                }
+                if (targetId === 'screen-final') {
+                    runConfettiBurst(80);
+                    continuousConfettiInterval = setInterval(() => {
+                        runConfettiBurst(20);
+                    }, 400);
+                    setTimeout(() => {
+                        clearInterval(continuousConfettiInterval);
+                    }, 4000);
+                }
+            }, 50);
+        }
+
+        // Global Alert System
+        function createToast(message, type) {
+            const container = document.getElementById('toast-box');
+            const alertNode = document.createElement('div');
+            alertNode.className = 'toast';
+            alertNode.style.backgroundColor = (type === 'correct') ? '#27ae60' : '#e74c3c';
+            alertNode.innerText = message;
+            
+            container.appendChild(alertNode);
+            setTimeout(() => {
+                alertNode.remove();
+            }, 2000);
+        }
+
+        // Confetti Generator System
+        function runConfettiBurst(count) {
+            const pool = ['', '', '', ''];
+            for (let i = 0; i < count; i++) {
+                const element = document.createElement('span');
+                element.className = 'confetti-particle';
+                element.innerText = pool[Math.floor(Math.random() * pool.length)];
+                element.style.left = Math.random() * 100 + '%';
+                
+                const timeline = 2 + Math.random() * 2;
+                element.style.animationDuration = timeline + 's';
+                element.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                document.body.appendChild(element);
+                setTimeout(() => { element.remove(); }, (timeline + 0.5) * 1000);
+            }
+        }
+
+        // SCREEN 1 Logic Flow
+        window.addEventListener('DOMContentLoaded', () => {
+            switchScreen('screen-opening');
+            const sequences = ['line1', 'line2', 'line3', 'line4'];
+            sequences.forEach((id, index) => {
+                setTimeout(() => {
+                    document.getElementById(id).classList.add('visible');
+                    if(index === sequences.length - 1) {
+                        setTimeout(() => {
+                            document.getElementById('start-btn').style.display = 'block';
+                        }, 2000);
+                    }
+                }, (index + 1) * 700);
+            });
+        });
+
+        function goToGate() {
+            switchScreen('screen-gate');
+        }
+
+        // SCREEN 2 Interactive Logic
+        function handleGateClick(isButtonA) {
+            if (gateClickCount < 5) {
+                gateClickCount++;
+                const outputLabel = document.getElementById('gate-counter-msg');
+                const targetB = document.getElementById('trap-b-btn');
+                
+                const dialogueTracks = {
+                    1: "Think again... ",
+                    2: "Are you sure about that? ",
+                    3: "ERROR: Incorrect answer flagged. ",
+                    4: "Your response has been marked suspicious. ",
+                    5: "Fine. I'm not offended. (I am.) This is your last chance."
+                };
+
+                if (dialogueTracks[gateClickCount]) {
+                    outputLabel.innerText = dialogueTracks[gateClickCount];
+                }
+
+                if (gateClickCount >= 5) {
+                    targetB.classList.add('unlocked');
+                    document.getElementById('gate-b-hint').style.display = 'block';
+                }
+            } else {
+                // Once 5 clicks are reached, Button B acts as the vehicle forward
+                if (!isButtonA) {
+                    escapeGate();
+                }
+            }
+        }
+
+        function escapeGate() {
+            switchScreen('screen-quiz');
+            renderQuizBlock();
+        }
+
+        // SCREEN 3 Quiz Lifecycle Engine
+        function renderQuizBlock() {
+            const totalQuestions = quizDatabase.length;
+            const progressPct = (currentQuizIndex / totalQuestions) * 100;
+            document.getElementById('quiz-progress').style.width = progressPct + '%';
+            document.getElementById('quiz-tracker-text').innerText = `Question ${currentQuizIndex + 1} of ${totalQuestions}`;
+
+            const liveQuestion = quizDatabase[currentQuizIndex];
+            document.getElementById('live-question-text').innerText = liveQuestion.questionText;
+
+            const matrixContainer = document.getElementById('live-options-box');
+            matrixContainer.innerHTML = '';
+
+            liveQuestion.options.forEach((opt) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerText = opt.text;
+                button.onclick = () => processAnswerAttempt(opt, button);
+                matrixContainer.appendChild(button);
+            });
+        }
+
+        function processAnswerAttempt(selectedOpt, uiButton) {
+            const dataObj = quizDatabase[currentQuizIndex];
+            
+            if (selectedOpt.isCorrect) {
+                createToast(" Correct! Barely.", "correct");
+                currentQuizIndex++;
+                
+                setTimeout(() => {
+                    if (currentQuizIndex < quizDatabase.length) {
+                        renderQuizBlock();
+                    } else {
+                        document.getElementById('quiz-progress').style.width = '100%';
+                        triggerOverlayIntermission();
+                    }
+                }, 1500);
+            } else {
+                createToast(selectedOpt.wrongToast, "wrong");
+                
+                if (dataObj.specialMechanic) {
+                    q5WrongCounter++;
+                    if (q5WrongCounter === 3) {
+                        injectSpecialOptionE();
+                    }
+                }
+            }
+        }
+
+        function injectSpecialOptionE() {
+            const targetContainer = document.getElementById('live-options-box');
+            const buttonE = document.createElement('button');
+            buttonE.className = 'option-btn flash-option';
+            buttonE.innerText = "e) Always. Non-stop. Constantly. 24/7.";
+            
+            buttonE.onclick = () => {
+                createToast("Finally. There it is.", "correct");
+                currentQuizIndex++;
+                setTimeout(() => {
+                    renderQuizBlock();
+                }, 1500);
+            };
+            
+            targetContainer.appendChild(buttonE);
+        }
+
+        function triggerOverlayIntermission() {
+            const overlay = document.getElementById('congrats-layer');
+            overlay.classList.add('show');
+            runConfettiBurst(80);
+            
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                switchScreen('screen-video');
+            }, 2500);
+        }
+
+        // Navigation Bridges
+        function goToCrown() {
+            switchScreen('screen-crown');
+        }
+
+        function goToFinal() {
+            switchScreen('screen-final');
+        }
+    </script>
+</body>
+</html>
